@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TWINMARK — Social-first marketing studio, Athens</title>
+  <meta name="description" content="TWINMARK is a sibling-run digital marketing studio in Athens. Short-form video, static posts and websites for local brands — measured by real results on Instagram & TikTok." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="TWINMARK — Social-first marketing studio" />
+  <meta property="og:description" content="Two siblings. One mark. Scroll-stopping content for local brands." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://twinmark.gr/" />
+  <meta property="og:image" content="https://twinmark.gr/assets/img/logo-full.png" />
+  <link rel="canonical" href="https://twinmark.gr/" />
+
+  <link rel="icon" type="image/png" href="assets/img/logo-mark.png" />
+
+  <!-- Typography: Manrope (Latin + Greek support) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="assets/css/styles.css?v=9" />
+</head>
+<body>
+
+  <!-- ======================================================
+       NAVBAR — floating pill, turns to glass on scroll
+  ======================================================= -->
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+      <a class="nav__logo" href="#top" aria-label="TWINMARK — back to top">
+        <img src="assets/img/logo-full.png?v=2" alt="TWINMARK" width="150" height="50" />
+      </a>
+      <nav class="nav__links" id="navLinks" aria-label="Primary">
+        <a href="#services">Services</a>
+        <a href="#video">Video</a>
+        <a href="#image">Static&nbsp;posts</a>
+        <a href="#web">Websites</a>
+      </nav>
+      <a href="#contact" class="btn btn--primary nav__cta">Start a project</a>
+      <button class="nav__burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ======================================================
+         SECTION 1 · HERO — what is TWINMARK
+    ======================================================= -->
+    <section class="hero" id="hero">
+      <div class="hero__bg" aria-hidden="true">
+        <span class="hero__orb hero__orb--aqua"></span>
+        <span class="hero__orb hero__orb--indigo"></span>
+        <span class="hero__grid"></span>
+      </div>
+
+      <div class="container hero__inner">
+        <h1 class="hero__title" data-hero-reveal>
+          Two siblings.<br />
+          One mark. <span class="gradient-text">Content</span><br />
+          people stop for.
+        </h1>
+
+        <p class="hero__sub" data-hero-reveal>
+          TWINMARK runs social media for local businesses — Instagram &amp; TikTok
+          content, captions, short-form video and content planning that turn
+          neighbourhood brands into local favourites.
+        </p>
+
+        <div class="hero__actions" data-hero-reveal>
+          <a href="#contact" class="btn btn--primary btn--lg">Start a project</a>
+          <a href="#services" class="btn btn--ghost btn--lg">See the results</a>
+        </div>
+
+        <dl class="hero__stats" data-hero-reveal>
+          <div class="stat">
+            <dt><span class="stat__num" data-count="597000" data-count-suffix="+">0</span></dt>
+            <dd>views on featured work</dd>
+          </div>
+          <div class="stat">
+            <dt><span class="stat__num" data-count="6">0</span></dt>
+            <dd>local brands managed</dd>
+          </div>
+          <div class="stat">
+            <dt><span class="stat__num" data-count="100" data-count-suffix="%">0</span></dt>
+            <dd>produced in-house</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Client handle marquee -->
+      <div class="marquee" aria-hidden="true" data-hero-reveal>
+        <div class="marquee__track">
+          <span>@lizzys_coffee_and_more</span><i>✦</i>
+          <span>@_xagk_</span><i>✦</i>
+          <span>@chefbf</span><i>✦</i>
+          <span>@lousi_rosi</span><i>✦</i>
+          <span>@eleanna_sotiriou</span><i>✦</i>
+          <span>@bluedreams.flisvos</span><i>✦</i>
+          <!-- duplicated for the seamless loop -->
+          <span>@lizzys_coffee_and_more</span><i>✦</i>
+          <span>@_xagk_</span><i>✦</i>
+          <span>@chefbf</span><i>✦</i>
+          <span>@lousi_rosi</span><i>✦</i>
+          <span>@eleanna_sotiriou</span><i>✦</i>
+          <span>@bluedreams.flisvos</span><i>✦</i>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================
+         THE JOURNEY — everything inside shares the scroll spine.
+         The SVG line is injected & drawn by assets/js/scroll-line.js
+    ======================================================= -->
+    <div class="journey" id="journey">
+
+      <svg class="spine" id="spine" aria-hidden="true" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="spineGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0"   stop-color="#7ACFD6" />
+            <stop offset="0.4" stop-color="#5384B7" />
+            <stop offset="0.7" stop-color="#3B50A3" />
+            <stop offset="1"   stop-color="#007775" />
+          </linearGradient>
+        </defs>
+        <!-- faint full-length track -->
+        <path class="spine__track" d="" />
+        <!-- the animated fill, drawn in sync with scroll -->
+        <path class="spine__fill" d="" />
+      </svg>
+
+      <!-- ====================================================
+           SECTION 2 · SERVICES + RESULTS
+      ===================================================== -->
+      <section class="section" id="services">
+        <div class="container section__intro" data-reveal>
+          <span class="spine-anchor" data-side="center"></span>
+          <p class="eyebrow">What we do</p>
+          <h2>Three services.<br /><span class="gradient-text">One standard: results.</span></h2>
+          <p class="section__lead">
+            Every brand gets the full TWINMARK treatment — strategy, production
+            and posting. We don't measure our work in deliverables; we measure
+            it in what actually happened in the feed.
+          </p>
+        </div>
+
+        <!-- ················ 01 · VIDEO PRODUCTION ················ -->
+        <article class="service" id="video">
+          <div class="container">
+            <header class="service__head" data-reveal>
+              <span class="spine-anchor" data-side="center" data-nodot></span>
+              <span class="service__index">01</span>
+              <h3>Video Production</h3>
+              <p>
+                Short-form video that earns attention — scripted, shot and cut
+                in-house for Instagram Reels &amp; TikTok. Trends adapted to each
+                brand's voice, never copy-pasted.
+              </p>
+            </header>
+
+            <div class="phones">
+              <!-- Lizzy's · IG reel · left of the line -->
+              <figure class="phone" data-reveal="left">
+                <div class="phone__screen">
+                  <video src="assets/video/reel-lizzys-genz.mp4" poster="assets/video/reel-lizzys-genz-poster.jpg"
+                         muted loop playsinline preload="metadata"></video>
+                  <span class="phone__badge phone__badge--ig">Instagram</span>
+                </div>
+                <figcaption>
+                  <strong>@lizzys_coffee_and_more</strong>
+                  <em lang="el">«POV: Δουλεύεις με Gen Z»</em>
+                  <span class="phone__stats">
+                    <b>▶ 479K</b><b>♥ 4,418</b><b>💬 37</b>
+                  </span>
+                  <a class="phone__link" href="https://www.instagram.com/p/DaNm9PaKmuY/" target="_blank" rel="noopener">View post ↗</a>
+                </figcaption>
+              </figure>
+
+              <!-- XAGK · TikTok · right of the line -->
+              <figure class="phone" data-reveal="right">
+                <div class="phone__screen">
+                  <video src="assets/video/tiktok-xagk.mp4" poster="assets/video/tiktok-xagk-poster.jpg"
+                         muted loop playsinline preload="metadata"></video>
+                  <span class="phone__badge phone__badge--tt">TikTok</span>
+                </div>
+                <figcaption>
+                  <strong>@_xagk_</strong>
+                  <em lang="el">«Η Μαμά Ντίνα πάντα έχει τον δικό της τρόπο»</em>
+                  <span class="phone__stats">
+                    <b>▶ 89K</b><b>♥ 1,332</b><b>💬 8</b><b>↗ 49</b>
+                  </span>
+                  <a class="phone__link" href="https://www.tiktok.com/@_xagk_/video/7607918673914875158" target="_blank" rel="noopener">View post ↗</a>
+                </figcaption>
+              </figure>
+
+              <!-- Chef BF · TikTok · left of the line -->
+              <figure class="phone" data-reveal="left">
+                <div class="phone__screen">
+                  <video src="assets/video/tiktok-chefbf.mp4" poster="assets/video/tiktok-chefbf-poster.jpg"
+                         muted loop playsinline preload="metadata"></video>
+                  <span class="phone__badge phone__badge--tt">TikTok</span>
+                </div>
+                <figcaption>
+                  <strong>@chefbf</strong>
+                  <em lang="el">«Το πρώτο μενού του καναλιού»</em>
+                  <span class="phone__stats">
+                    <b>▶ 24.4K</b><b>♥ 623</b><b>💬 27</b><b>↗ 15</b>
+                  </span>
+                  <a class="phone__link" href="https://www.tiktok.com/@chefbf/video/7610007940547874070" target="_blank" rel="noopener">View post ↗</a>
+                </figcaption>
+              </figure>
+
+              <!-- Eleanna · IG reel · right of the line -->
+              <figure class="phone" data-reveal="right">
+                <div class="phone__screen">
+                  <video src="assets/video/reel-posture.mp4" poster="assets/video/reel-posture-poster.jpg"
+                         muted loop playsinline preload="metadata"></video>
+                  <span class="phone__badge phone__badge--ig">Instagram</span>
+                </div>
+                <figcaption>
+                  <strong>@eleanna_sotiriou</strong>
+                  <em>"Do these exercises for better posture"</em>
+                  <span class="phone__stats">
+                    <b>▶ 4,825</b><b>♥ 136</b><b>💬 4</b>
+                  </span>
+                  <a class="phone__link" href="https://www.instagram.com/reel/DT2zwgbjOyX/" target="_blank" rel="noopener">View post ↗</a>
+                </figcaption>
+              </figure>
+            </div>
+          </div>
+        </article>
+
+        <!-- ················ 02 · IMAGE PRODUCTION ················ -->
+        <article class="service" id="image">
+          <div class="container">
+            <header class="service__head" data-reveal>
+              <span class="spine-anchor" data-side="center" data-nodot></span>
+              <span class="service__index">02</span>
+              <h3>Image Production <small>· static posts</small></h3>
+              <p>
+                Feeds that look like brands, not templates. Art-directed static
+                posts — product shots, typography and layouts designed per
+                client, ready for the grid.
+              </p>
+            </header>
+
+            <!-- No static grid here: the work pops up around the line while
+                 you scroll through this stage (assets/js/scroll-trail.js).  -->
+            <div class="trail-stage">
+              <p class="trail-stage__hint" data-reveal>✦ keep scrolling — the work finds you</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- ················ 03 · WEBSITE CREATION ················ -->
+        <article class="service" id="web">
+          <div class="container">
+            <header class="service__head" data-reveal>
+              <span class="spine-anchor" data-side="center" data-nodot data-swing="left"></span>
+              <span class="service__index">03</span>
+              <h3>Website Creation</h3>
+              <p>
+                Websites that finish the job your content starts. Fast,
+                mobile-first sites with motion and personality — built to turn
+                the follower into a customer.
+              </p>
+            </header>
+
+            <div class="webshow">
+              <!-- The real thing: TWINMARK's build for Lizzy's, embedded live -->
+              <div class="browser" data-reveal="left">
+                <div class="browser__bar">
+                  <i></i><i></i><i></i>
+                  <a class="browser__url" href="https://lizzys-site-test.themismisichronis.workers.dev" target="_blank" rel="noopener">lizzys-site-test.themismisichronis.workers.dev</a>
+                </div>
+                <div class="browser__viewport">
+                  <iframe src="https://lizzys-site-test.themismisichronis.workers.dev"
+                          title="Lizzy's Coffee & more — live website built by TWINMARK"
+                          loading="lazy" tabindex="-1"></iframe>
+                  <a class="browser__live" href="https://lizzys-site-test.themismisichronis.workers.dev" target="_blank" rel="noopener">
+                    <span class="browser__live-dot"></span> Live · open site ↗
+                  </a>
+                </div>
+              </div>
+
+              <ul class="webshow__points">
+                <li data-reveal="right"><b>Design systems</b> — tokens, type scale and components, so every page feels like the brand.</li>
+                <li data-reveal="right"><b>Motion built-in</b> — scroll-driven storytelling like the line on this very page.</li>
+                <li data-reveal="right"><b>Performance-first</b> — optimised media, lazy loading, no bloat. Speed is a feature.</li>
+                <li data-reveal="right"><b>Social-connected</b> — your feed, reviews and booking links, one tap away.</li>
+              </ul>
+            </div>
+          </div>
+        </article>
+
+        <!-- terminal node — the spine ends where the services end -->
+        <div class="spine-end" aria-hidden="true">
+          <span class="spine-anchor" data-side="center" data-end="true"></span>
+        </div>
+      </section>
+
+      <!-- ====================================================
+           SECTION 3 · CONTACT — multi-step experience
+      ===================================================== -->
+      <section class="section section--contact" id="contact">
+        <div class="container">
+          <div class="section__intro section__intro--tight" data-reveal>
+            <p class="eyebrow">Say hello</p>
+            <h2>Let's make your brand<br /><span class="gradient-text">the local favourite.</span></h2>
+            <p class="section__lead">
+              Four quick steps — takes less than a minute. We reply within one
+              working day.
+            </p>
+          </div>
+
+          <form class="wizard" id="wizard" novalidate data-reveal>
+            <!-- progress -->
+            <div class="wizard__progress" aria-hidden="true">
+              <span class="wizard__progress-fill" id="wizardProgress"></span>
+            </div>
+            <ol class="wizard__steps-nav" id="wizardStepsNav" aria-hidden="true">
+              <li class="is-active">You</li><li>Service</li><li>Budget</li><li>Message</li>
+            </ol>
+
+            <!-- STEP 1 · who you are -->
+            <fieldset class="wizard__step is-active" data-step="1">
+              <legend>Tell us who you are</legend>
+              <div class="field">
+                <label for="fName">Your name *</label>
+                <input id="fName" name="name" type="text" autocomplete="name" placeholder="e.g. Maria Papadopoulou" required />
+              </div>
+              <div class="field">
+                <label for="fBusiness">Business / brand *</label>
+                <input id="fBusiness" name="business" type="text" autocomplete="organization" placeholder="e.g. Lizzy's Coffee & more" required />
+              </div>
+              <div class="field">
+                <label for="fInsta">Instagram or TikTok handle <small>(optional)</small></label>
+                <input id="fInsta" name="handle" type="text" placeholder="@yourbrand" />
+              </div>
+            </fieldset>
+
+            <!-- STEP 2 · service -->
+            <fieldset class="wizard__step" data-step="2">
+              <legend>What do you need?</legend>
+              <p class="wizard__hint">Pick as many as you like.</p>
+              <div class="chips" role="group" aria-label="Services">
+                <button type="button" class="chip" data-value="Video production">🎬 Video production</button>
+                <button type="button" class="chip" data-value="Static posts">🖼 Static posts</button>
+                <button type="button" class="chip" data-value="Website">💻 Website</button>
+                <button type="button" class="chip" data-value="Full management">🚀 Full social management</button>
+                <button type="button" class="chip" data-value="Not sure yet">🤔 Not sure yet</button>
+              </div>
+            </fieldset>
+
+            <!-- STEP 3 · budget -->
+            <fieldset class="wizard__step" data-step="3">
+              <legend>Monthly budget</legend>
+              <p class="wizard__hint">A range is enough — it helps us propose the right plan.</p>
+              <div class="chips chips--single" role="group" aria-label="Budget">
+                <button type="button" class="chip" data-value="Under €300">Under €300</button>
+                <button type="button" class="chip" data-value="€300 – €600">€300 – €600</button>
+                <button type="button" class="chip" data-value="€600 – €1,000">€600 – €1,000</button>
+                <button type="button" class="chip" data-value="€1,000+">€1,000+</button>
+                <button type="button" class="chip" data-value="Let's discuss">Let's discuss</button>
+              </div>
+            </fieldset>
+
+            <!-- STEP 4 · message + contact -->
+            <fieldset class="wizard__step" data-step="4">
+              <legend>Almost done</legend>
+              <div class="field">
+                <label for="fEmail">Email or phone *</label>
+                <input id="fEmail" name="contact" type="text" autocomplete="email" placeholder="you@brand.gr or +30 …" required />
+              </div>
+              <div class="field">
+                <label for="fMsg">Anything else? <small>(optional)</small></label>
+                <textarea id="fMsg" name="message" rows="4" placeholder="Tell us about your goals, timelines, favourite coffee…"></textarea>
+              </div>
+              <p class="wizard__summary" id="wizardSummary" aria-live="polite"></p>
+            </fieldset>
+
+            <!-- SUCCESS -->
+            <div class="wizard__success" id="wizardSuccess" hidden>
+              <span class="wizard__success-mark">
+                <svg viewBox="0 0 52 52"><path d="M14 27l8 8 16-18" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <h3>Got it — thank you!</h3>
+              <p>Your brief is on its way. We'll get back to you within one working day.<br />Meanwhile, why not check <a href="#video">what we did for brands like yours</a>?</p>
+            </div>
+
+            <!-- controls -->
+            <div class="wizard__controls" id="wizardControls">
+              <button type="button" class="btn btn--ghost" id="wizardBack" disabled>← Back</button>
+              <button type="button" class="btn btn--primary" id="wizardNext">Next →</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div><!-- /.journey -->
+  </main>
+
+  <!-- ======================================================
+       FOOTER
+  ======================================================= -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <img class="footer__mark" src="assets/img/logo-mark.png" alt="" width="42" height="42" />
+      <p class="footer__word">TWIN<b>MARK</b></p>
+      <p class="footer__tag">Two siblings. One mark. Athens, GR.</p>
+      <nav class="footer__social" aria-label="Social">
+        <!-- shared brand-gradient for the icons below -->
+        <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+          <defs>
+            <linearGradient id="socialGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0"   stop-color="#7ACFD6" />
+              <stop offset="0.5" stop-color="#5384B7" />
+              <stop offset="1"   stop-color="#3B50A3" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <a href="https://www.instagram.com/twinmark_/" target="_blank" rel="noopener" aria-label="TWINMARK on Instagram">
+          <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false">
+            <path fill="url(#socialGrad)" d="M12 2.2c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23a3.72 3.72 0 0 1-.9 1.38c-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.72 3.72 0 0 1-1.38-.9 3.72 3.72 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.58 2.2 15.2 2.2 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.21 8.8 2.2 12 2.2m0-2.2C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38A5.9 5.9 0 0 0 .63 4.14C.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56 1.28.06 1.69.07 4.95.07s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zm0 10.15A3.99 3.99 0 1 1 15.99 12 3.99 3.99 0 0 1 12 15.99zM19.85 5.59a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44z"/>
+          </svg>
+        </a>
+        <a href="https://wa.me/306944036657" target="_blank" rel="noopener" aria-label="Chat with TWINMARK on WhatsApp">
+          <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false">
+            <path fill="url(#socialGrad)" d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.25-.46-2.39-1.47a8.93 8.93 0 0 1-1.65-2.05c-.17-.3-.02-.46.13-.61.14-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.5 0 1.47 1.07 2.89 1.22 3.09.15.2 2.11 3.22 5.1 4.51.71.31 1.27.49 1.7.63.72.23 1.37.2 1.88.12.58-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35zM12.05 21.79h-.01a9.8 9.8 0 0 1-4.99-1.37l-.36-.21-3.71.97.99-3.62-.23-.37a9.77 9.77 0 0 1-1.5-5.21c0-5.4 4.4-9.8 9.82-9.8a9.75 9.75 0 0 1 6.93 2.88 9.74 9.74 0 0 1 2.87 6.93c0 5.41-4.4 9.8-9.81 9.8zm8.35-18.15A11.71 11.71 0 0 0 12.05 .2C5.55.2.26 5.49.26 11.98c0 2.08.54 4.1 1.57 5.89L.16 24l6.27-1.64a11.78 11.78 0 0 0 5.62 1.43h.01c6.5 0 11.79-5.29 11.79-11.78 0-3.15-1.22-6.11-3.45-8.34z"/>
+          </svg>
+        </a>
+        <a href="tel:+306983760254" aria-label="Call TWINMARK">
+          <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" focusable="false">
+            <path fill="url(#socialGrad)" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.36 11.36 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.36 11.36 0 0 0 .57 3.57 1 1 0 0 1-.25 1.02l-2.2 2.2z"/>
+          </svg>
+        </a>
+      </nav>
+      <p class="footer__fine">© <span id="year">2026</span> TWINMARK. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- GSAP core + ScrollTrigger (pinned versions) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  <script src="assets/js/scroll-line.js?v=9"></script>
+  <script src="assets/js/scroll-trail.js?v=9"></script>
+  <script src="assets/js/main.js?v=9"></script>
+</body>
+</html>
