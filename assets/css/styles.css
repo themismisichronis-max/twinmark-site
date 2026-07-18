@@ -57,6 +57,15 @@
 /* NOTE: no CSS scroll-behavior:smooth here — it fights ScrollTrigger's
    position restores. Anchor links scroll smoothly via JS (main.js).       */
 
+/* Lock horizontal panning on BOTH roots: mobile browsers ignore
+   overflow-x on body alone and let the page drift sideways into empty
+   space. `clip` blocks it without creating a new scroll container
+   (`hidden` stays as the fallback for older browsers).                    */
+html {
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
 body {
   margin: 0;
   font-family: var(--font);
@@ -67,6 +76,7 @@ body {
   background: var(--c-bg);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 img, video { max-width: 100%; display: block; }
@@ -971,6 +981,14 @@ a:hover { text-decoration: none; }
   .section__intro, .service__head { padding-top: 40px; }
 
   .wizard__controls { flex-direction: row; }
+}
+
+/* Desktop: the video cards and the contact form get room to breathe —
+   larger media, less empty white on the sides. Purely a size change,
+   the layout and the scroll-line routing around them stay the same.      */
+@media (min-width: 1200px) {
+  .phone { max-width: 430px; }
+  .wizard { max-width: 880px; }
 }
 
 /* ==========================================================================

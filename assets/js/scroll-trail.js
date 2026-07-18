@@ -51,6 +51,12 @@
 
   var hasGsap = typeof window.gsap !== "undefined";
 
+  /* Layout-viewport size. window.innerWidth/innerHeight shrink while the
+     user pinch-zooms on a phone, which used to scatter spawn positions —
+     these stay stable no matter the zoom level.                           */
+  function vw() { return document.documentElement.clientWidth; }
+  function vh() { return document.documentElement.clientHeight; }
+
   document.addEventListener("DOMContentLoaded", boot);
   if (document.readyState !== "loading") boot();
 
@@ -111,7 +117,7 @@
        scroll handler sweeps away whatever is still on screen.             */
     function inImageZone() {
       if (!imageSection) return false;
-      var probe = window.innerHeight * 0.55;
+      var probe = vh() * 0.55;
       var r = imageSection.getBoundingClientRect();
       var startY = imageHead ? imageHead.getBoundingClientRect().bottom : r.top;
       return startY < probe && r.bottom > probe;
@@ -177,16 +183,16 @@
     function sideX(extent) {
       side *= -1;
       var xc = side < 0
-        ? window.innerWidth * rand(0.05, 0.2)
-        : window.innerWidth * rand(0.8, 0.95);
+        ? vw() * rand(0.05, 0.2)
+        : vw() * rand(0.8, 0.95);
       return Math.round(
-        Math.min(Math.max(xc - extent / 2, 6), window.innerWidth - extent - 6)
+        Math.min(Math.max(xc - extent / 2, 6), vw() - extent - 6)
       );
     }
 
     function spawnY(el, h, scrollingDown) {
-      var yc = window.innerHeight * rand(0.32, 0.68)
-        + (scrollingDown ? 1 : -1) * window.innerHeight * 0.1;
+      var yc = vh() * rand(0.32, 0.68)
+        + (scrollingDown ? 1 : -1) * vh() * 0.1;
       el.style.top = Math.round(yc - h / 2) + "px";
     }
 
@@ -200,7 +206,7 @@
       img.src = srcs[imgIndex % srcs.length];
       imgIndex++;
 
-      var mobile = window.innerWidth < 720;
+      var mobile = vw() < 720;
       var w = rand(CONFIG.IMG_MIN, CONFIG.IMG_MAX) * (mobile ? 0.633 : 1);
       /* mobile factor = 0.55 × 1.15 — images run 15% bigger on phones    */
       img.style.width = w + "px";

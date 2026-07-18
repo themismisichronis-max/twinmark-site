@@ -97,13 +97,27 @@
     }
 
     /* drop duplicate points — zero-length legs would break the rounding  */
-    var p = [pts[0]];
+    var p0 = [pts[0]];
     for (var i = 1; i < pts.length; i++) {
-      var prev = p[p.length - 1];
+      var prev = p0[p0.length - 1];
       if (Math.abs(pts[i].x - prev.x) > 0.5 || Math.abs(pts[i].y - prev.y) > 0.5) {
-        p.push(pts[i]);
+        p0.push(pts[i]);
       }
     }
+
+    /* Drop waypoints that barely bend the route (within 12px of the
+       straight line between their neighbours). Such micro-jogs create a
+       pair of stubby legs that clamp the corner radius to almost nothing
+       — they render as a sharp kink instead of a big smooth turn.        */
+    var p = [p0[0]];
+    for (var k = 1; k < p0.length - 1; k++) {
+      var A = p[p.length - 1], B = p0[k], C = p0[k + 1];
+      var vx = C.x - A.x, vy = C.y - A.y;
+      var vlen = Math.sqrt(vx * vx + vy * vy) || 1;
+      var dPerp = Math.abs((B.x - A.x) * vy - (B.y - A.y) * vx) / vlen;
+      if (dPerp > 12) p.push(B);
+    }
+    p.push(p0[p0.length - 1]);
     if (p.length < 2) return "M " + p[0].x + " " + p[0].y;
 
     var d = "M " + p[0].x + " " + p[0].y;
@@ -135,14 +149,27 @@
        every block it meets — never across, never behind.                   */
     var cx = W / 2;
 
-    /* Reveal animations hold elements translated (gsap x/y) while we
-       measure — compensate, or every swing is computed from a shifted box */
+    /* Reveal animations hold elements translated while we measure —
+       compensate, or every swing is computed from a shifted box. The
+       offset is read from the RENDERED transform matrix (not from gsap's
+       cached value, which can disagree with what is actually painted and
+       used to shift boxes by the full reveal distance).                   */
     function rectOf(el) {
       var r = el.getBoundingClientRect();
       var ox = 0, oy = 0;
-      if (hasGsap) {
-        ox = parseFloat(gsap.getProperty(el, "x")) || 0;
-        oy = parseFloat(gsap.getProperty(el, "y")) || 0;
+      var t = getComputedStyle(el).transform;
+      if (t && t !== "none") {
+        var m2 = t.match(/^matrix\(([^)]+)\)/);
+        var m3 = t.match(/^matrix3d\(([^)]+)\)/);
+        if (m2) {
+          var v = m2[1].split(",");
+          ox = parseFloat(v[4]) || 0;
+          oy = parseFloat(v[5]) || 0;
+        } else if (m3) {
+          var v3 = m3[1].split(",");
+          ox = parseFloat(v3[12]) || 0;
+          oy = parseFloat(v3[13]) || 0;
+        }
       }
       return {
         left: r.left - ox,
@@ -280,8 +307,11 @@
         pushPt(b.x, b.top - 24);
         pushPt(b.x, b.bottom + 24);
         /* sweep straight across to the next card's side (the user-drawn
-           snake) — only return to center before a distant/none-card event */
-        if (!next || next.kind !== "avoid" || next.top - b.bottom > 260) {
+           snake) — only return to center before a distant/none-card event.
+           If the bypass lane is already near-center, stay in it: a jog of
+           a few px to the exact center just renders as a sharp notch.     */
+        if ((!next || next.kind !== "avoid" || next.top - b.bottom > 260) &&
+            Math.abs(b.x - cx) > 48) {
           pushPt(cx, b.bottom + 60);
         }
         return;
@@ -295,11 +325,15 @@
       var tx = cx + dir * Math.min(b.halfW + CONFIG.CLEARANCE,
                                    W / 2 - CONFIG.EDGE_PAD);
 
-      /* stay centered until any card above is fully passed, THEN swing    */
+      /* stay centered until any card above is fully passed, THEN swing.
+         When the line already travels a near-center lane, keep that lane
+         for the wait point — snapping to the exact center draws a notch. */
       var entryRefY = b.dot ? b.top - CONFIG.DOT_GAP : b.top - 36;
       var blocker = obstacleBottomAbove(entryRefY, tx, cx);
       if (isFinite(blocker)) {
-        pushPt(cx, Math.min(blocker + 14, entryRefY - 20));
+        var lastX = pts[pts.length - 1].x;
+        var waitX = Math.abs(lastX - cx) <= 48 ? lastX : cx;
+        pushPt(waitX, Math.min(blocker + 14, entryRefY - 20));
       }
 
       /* the return diagonal must finish ABOVE whatever card sits below.
@@ -319,7 +353,9 @@
         pushPt(cx, b.top - CONFIG.DOT_GAP);
         nodes.push({ x: cx, y: pts[pts.length - 1].y, dot: true });
         pushPt(tx, b.top + 20);
-        pushPt(tx, b.bottom + 6);
+        /* +28 (not less): the exit turn's arc reaches ~this far back UP
+           the lane — less clearance lets it nick the block's bottom edge */
+        pushPt(tx, b.bottom + 28);
       } else {
         /* pass fully BESIDE the block — the line never enters the text
            column, so it can't cross the words or badge. The side lane
@@ -327,7 +363,7 @@
            close below), so the exit diagonal always crosses under the
            text, not through its last line.                                */
         pushPt(tx, b.top - 36);
-        pushPt(tx, Math.max(b.bottom + 24, Math.min(b.bottom + 36, returnY - 18)));
+        pushPt(tx, Math.max(b.bottom + 44, Math.min(b.bottom + 56, returnY - 18)));
       }
 
       /* If the next card gets bypassed on this SAME side, don't dart back
@@ -509,11 +545,17 @@
     }
   }
 
+  /* The layout viewport width — unlike window.innerWidth it does NOT
+     change while the user pinch-zooms on a phone, so zooming can never
+     trigger a rebuild (which used to shift the line and jump the scroll
+     position mid-zoom).                                                   */
+  function layoutW() { return document.documentElement.clientWidth; }
+
   var resizeTimer = null;
-  var lastW = window.innerWidth;
+  var lastW = layoutW();
   window.addEventListener("resize", function () {
-    if (window.innerWidth === lastW) return; /* ignore mobile URL-bar jumps */
-    lastW = window.innerWidth;
+    if (layoutW() === lastW) return; /* URL-bar jumps & pinch-zoom: ignore */
+    lastW = layoutW();
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(rebuild, 250);
   }, { passive: true });
