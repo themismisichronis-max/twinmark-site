@@ -983,12 +983,26 @@ a:hover { text-decoration: none; }
   .wizard__controls { flex-direction: row; }
 }
 
-/* Desktop: the video cards and the contact form get room to breathe —
-   larger media, less empty white on the sides. Purely a size change,
-   the layout and the scroll-line routing around them stay the same.      */
+/* Desktop: the video cards, the contact form and the numbered section
+   headers get room to breathe — larger media and type, less empty white.
+   Purely a size change: the scroll line measures the blocks' real boxes
+   on every build, so its route widens around them automatically.        */
 @media (min-width: 1200px) {
   .phone { max-width: 430px; }
   .wizard { max-width: 880px; }
+
+  .service__head { max-width: 720px; }
+  .service__index {
+    width: 76px; height: 76px;
+    font-size: 1.4rem;
+    margin-bottom: 24px;
+  }
+  .service__head h3 { font-size: 2.7rem; }
+  .service__head p { font-size: 1.15rem; }
+
+  /* the taller header needs more air above the showcase, or the line's
+     return turn has no room between the text and the browser card       */
+  .webshow { margin-top: 110px; }
 }
 
 /* ==========================================================================

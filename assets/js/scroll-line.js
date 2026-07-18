@@ -149,6 +149,14 @@
        every block it meets — never across, never behind.                   */
     var cx = W / 2;
 
+    /* Desktop's bigger blocks + big 120px turn arcs need more clearance
+       around cards; mobile's tight serpentine keeps the original gaps
+       (44px ones would eat the 56px row gap between alternating cards).  */
+    var desktop = W >= 1200;
+    var AV_GAP = desktop ? 44 : 24;     /* above / below bypassed cards   */
+    var SIDE_GAP = desktop ? 48 : 34;   /* beside bypassed cards          */
+    var RETURN_MARGIN = desktop ? 40 : 14; /* return turn vs card below   */
+
     /* Reveal animations hold elements translated while we measure —
        compensate, or every swing is computed from a shifted box. The
        offset is read from the RENDERED transform matrix (not from gsap's
@@ -227,8 +235,8 @@
       /* pass on whichever side has more open space                        */
       var passRight = (W - r.right) >= r.left;
       var ax = passRight
-        ? Math.min(r.right + 34, W - CONFIG.EDGE_PAD)
-        : Math.max(r.left - 34, CONFIG.EDGE_PAD);
+        ? Math.min(r.right + SIDE_GAP, W - CONFIG.EDGE_PAD)
+        : Math.max(r.left - SIDE_GAP, CONFIG.EDGE_PAD);
       events.push({
         kind: "avoid",
         x: ax,
@@ -303,9 +311,11 @@
       }
 
       if (b.kind === "avoid") {
-        /* pass fully BESIDE the card — enter above it, leave below it     */
-        pushPt(b.x, b.top - 24);
-        pushPt(b.x, b.bottom + 24);
+        /* pass fully BESIDE the card — enter above it, leave below it.
+           On desktop AV_GAP is 44: the rounded turn into the side lane
+           arcs back toward the card, and less clearance clips its corner */
+        pushPt(b.x, b.top - AV_GAP);
+        pushPt(b.x, b.bottom + AV_GAP);
         /* sweep straight across to the next card's side (the user-drawn
            snake) — only return to center before a distant/none-card event.
            If the bypass lane is already near-center, stay in it: a jog of
@@ -343,7 +353,10 @@
         b.bottom + CONFIG.CLEAR_BELOW,
         next ? (next.kind === "avoid" ? next.top - 64 : next.top - 60)
              : b.bottom + CONFIG.CLEAR_BELOW,
-        obstacleTopBelow(b.top, tx, cx) - 14
+        /* desktop margin 40 (not less): the return turn's arc reaches
+           ~this far back DOWN toward the card below — tighter margins
+           clip its corner                                                */
+        obstacleTopBelow(b.top, tx, cx) - RETURN_MARGIN
       );
 
       if (b.dot) {
