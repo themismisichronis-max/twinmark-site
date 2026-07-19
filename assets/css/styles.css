@@ -643,6 +643,17 @@ a:hover { text-decoration: none; }
   overflow: hidden;
   background: var(--c-bg-soft);
 }
+/* Static snapshot of the embedded site — shown on phones, where the live
+   iframe is never loaded (a second full website running inside the page
+   is what overwhelmed mobile Chrome). Desktop shows the live site.       */
+.browser__shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
 .browser__viewport iframe {
   position: absolute;
   top: 0; left: 0;

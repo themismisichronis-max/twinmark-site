@@ -148,6 +148,18 @@
    *  Live-site embed — keep the 1280px-wide iframe scaled to its frame
    * ------------------------------------------------------------------ */
 
+  /* The live-site embed is DESKTOP-ONLY: an entire second website running
+     inside the page (its own scripts, animations, videos) starves mobile
+     Chrome's main thread — reveals tangle up, the scroll line freezes.
+     Phones show the static snapshot (.browser__shot) instead; the
+     "Live · open site" link works everywhere.                            */
+  var liveFrame = document.querySelector(".browser__viewport iframe[data-src]");
+  if (liveFrame && window.matchMedia("(min-width: 1200px)").matches) {
+    liveFrame.src = liveFrame.getAttribute("data-src");
+    var frameShot = document.querySelector(".browser__shot");
+    if (frameShot) frameShot.style.display = "none";
+  }
+
   var frameViewport = document.querySelector(".browser__viewport");
   if (frameViewport) {
     var scaleFrame = function () {
