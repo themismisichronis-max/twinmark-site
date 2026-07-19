@@ -29,7 +29,17 @@
       "assets/img/work-lousi-lashes.jpg",
       "assets/img/work-lizzys-soda.jpg",
       "assets/img/work-chef-dinner.jpg",
-      "assets/img/work-bluedreams.jpg"
+      "assets/img/work-bluedreams.jpg",
+      "assets/img/work-coffee-break.jpg",
+      "assets/img/work-brunch-poster.png",
+      "assets/img/work-wellness-pilates.jpg",
+      "assets/img/work-iced-latte.jpg",
+      "assets/img/work-3.png",
+      "assets/img/work-coffee-quote.jpg",
+      "assets/img/work-yumtales-collagen.jpg",
+      "assets/img/work-bluedreams-4.png",
+      "assets/img/work-coffee-poster.jpg",
+      "assets/img/work-greek.jpg"
     ],
     IMG_EVERY: 160,         /* px of scrolling between two images           */
     IMG_LIFETIME: 1.15,     /* seconds an image stays before fading out     */

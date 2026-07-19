@@ -71,6 +71,12 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
+  /* Phones fire a window resize every time the browser bar slides in or
+     out at a scroll stop/start; by default ScrollTrigger reacts with a
+     full refresh — a visible stutter, replayed reveals and a scroll jump.
+     This tells it to ignore those height-only mobile resizes entirely.    */
+  ScrollTrigger.config({ ignoreMobileResize: true });
+
   var drawTween = null;
 
   /* ------------------------------------------------------------------ *
