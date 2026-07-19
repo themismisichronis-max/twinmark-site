@@ -158,6 +158,14 @@
         heldRec = null;
       }
 
+      /* Janitor — on an overloaded phone a fade animation can get starved
+         and never finish, leaving artwork stuck on screen; anything still
+         on the layer past its deadline is force-removed here.             */
+      var nowTs = performance.now();
+      Array.prototype.slice.call(layer.children).forEach(function (el) {
+        if (el.__zap && el.__zapAt && nowTs > el.__zapAt) el.__zap();
+      });
+
       /* user stopped scrolling → hold the newest image so it can actually
          be looked at; it stays until the next scroll (up OR down)         */
       clearTimeout(idleTimer);
@@ -213,6 +221,7 @@
 
       var img = document.createElement("img");
       img.className = "trail__img";
+      img.decoding = "async";     /* keep image decode off the main thread */
       img.src = srcs[imgIndex % srcs.length];
       imgIndex++;
 
@@ -226,12 +235,26 @@
       layer.appendChild(img);
 
       var rec = { fading: false };
+      var doneOnce = false;
       var done = function () {
+        if (doneOnce) return;
+        doneOnce = true;
         img.remove();
         liveImgs--;
         var at = records.indexOf(rec);
         if (at !== -1) records.splice(at, 1);
         if (heldRec === rec) heldRec = null;
+      };
+
+      /* Janitor contract (see the sweep in the scroll handler): if this
+         element somehow outlives its deadline — e.g. its fade tween got
+         starved on an overloaded phone — it is force-removed, bookkeeping
+         included, so stuck artwork can never pile up over the page.      */
+      img.__zapAt = performance.now() + CONFIG.IMG_LIFETIME * 1000 + 3000;
+      img.__zap = function () {
+        if (hasGsap) gsap.killTweensOf(img);
+        clearTimeout(rec.timer);
+        done();
       };
 
       var tilt = rand(-10, 10);
@@ -242,6 +265,7 @@
         rec.fade = function () {
           if (rec.fading) return;
           rec.fading = true;
+          img.__zapAt = performance.now() + 3000;  /* let the fade play   */
           gsap.to(img, {
             autoAlpha: 0, scale: 0.92,
             y: scrollingDown ? 44 : -44,
@@ -256,6 +280,7 @@
         rec.fade = function () {
           if (rec.fading) return;
           rec.fading = true;
+          img.__zapAt = performance.now() + 3000;
           img.style.opacity = "0";
           setTimeout(done, 450);
         };
@@ -281,7 +306,18 @@
       spawnY(s, size, scrollingDown);
 
       layer.appendChild(s);
-      var done = function () { s.remove(); liveSparks--; };
+      var sparkDone = false;
+      var done = function () {
+        if (sparkDone) return;
+        sparkDone = true;
+        s.remove();
+        liveSparks--;
+      };
+      s.__zapAt = performance.now() + CONFIG.SPARK_LIFETIME * 1000 + 3000;
+      s.__zap = function () {
+        if (hasGsap) gsap.killTweensOf(s);
+        done();
+      };
 
       if (hasGsap) {
         gsap.fromTo(s,

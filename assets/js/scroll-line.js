@@ -580,22 +580,38 @@
 
   var resizeTimer = null;
   var lastW = layoutW();
+  var lastScrollTs = 0;
+  window.addEventListener("scroll", function () {
+    lastScrollTs = Date.now();
+  }, { passive: true });
+
+  /* Never rebuild while the page is moving: a full geometry rebuild +
+     ScrollTrigger refresh mid-scroll is a visible stutter on phones and
+     measures a moving layout. Rebuilds wait for the scroll to settle.     */
+  function scheduleRebuild(delay) {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (Date.now() - lastScrollTs < 450) { scheduleRebuild(450); return; }
+      rebuild();
+    }, delay);
+  }
+
   window.addEventListener("resize", function () {
     if (layoutW() === lastW) return; /* URL-bar jumps & pinch-zoom: ignore */
     lastW = layoutW();
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(rebuild, 250);
+    scheduleRebuild(250);
   }, { passive: true });
 
-  /* Journey height changes (lazy images etc.) → keep geometry honest      */
+  /* Journey height changes (lazy images etc.) → keep geometry honest.
+     120px threshold: media settling nudges the layout by a few dozen px
+     at most — only REAL layout changes are worth a full rebuild.          */
   var lastH = 0;
   if ("ResizeObserver" in window) {
     var ro = new ResizeObserver(function (entries) {
       var h = entries[0].contentRect.height;
-      if (Math.abs(h - lastH) > 60) {
+      if (Math.abs(h - lastH) > 120) {
         lastH = h;
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(rebuild, 300);
+        scheduleRebuild(300);
       }
     });
     ro.observe(journey);
