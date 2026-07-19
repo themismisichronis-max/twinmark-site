@@ -536,7 +536,7 @@
    *  Rebuild on resize / late layout shifts (images, fonts)
    * ------------------------------------------------------------------ */
 
-  function rebuild() {
+  function rebuild(light) {
     if (drawTween) {
       if (drawTween.scrollTrigger) drawTween.scrollTrigger.kill();
       drawTween.kill();
@@ -562,7 +562,11 @@
       }
     });
 
-    ScrollTrigger.refresh();
+    /* A full ScrollTrigger.refresh() re-measures EVERY trigger on the page
+       — that's the expensive part, so it's reserved for big layout changes.
+       Light rebuilds only redraw the line: its own trigger was re-measured
+       when it was recreated just above.                                    */
+    if (!light) ScrollTrigger.refresh();
 
     /* Jump the fill straight to the correct progress — otherwise it would
        visibly re-sweep from the top after every rebuild.                   */
@@ -585,36 +589,55 @@
     lastScrollTs = Date.now();
   }, { passive: true });
 
-  /* Never rebuild while the page is moving: a full geometry rebuild +
-     ScrollTrigger refresh mid-scroll is a visible stutter on phones and
-     measures a moving layout. Rebuilds wait for the scroll to settle.     */
-  function scheduleRebuild(delay) {
+  /* Two-tier rebuilds:
+     · LIGHT — redraw the line only (no global refresh). Cheap, so it runs
+       almost immediately: the line must never sit on stale geometry, or
+       it visibly crosses text until corrected.
+     · FULL — includes ScrollTrigger.refresh(), which re-measures every
+       trigger on the page (the expensive part). Deferred briefly to a
+       scroll pause, but never for long.                                   */
+  var pendingFull = false;
+  function scheduleRebuild(delay, light) {
+    if (!light) pendingFull = true;
+    var runFull = pendingFull;
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      if (Date.now() - lastScrollTs < 450) { scheduleRebuild(450); return; }
-      rebuild();
-    }, delay);
+    var deferrals = 0;
+    var attempt = function () {
+      if (runFull && Date.now() - lastScrollTs < 350 && deferrals < 2) {
+        deferrals++;
+        resizeTimer = setTimeout(attempt, 400);
+        return;
+      }
+      pendingFull = false;
+      rebuild(!runFull);
+    };
+    resizeTimer = setTimeout(attempt, delay);
   }
 
   window.addEventListener("resize", function () {
     if (layoutW() === lastW) return; /* URL-bar jumps & pinch-zoom: ignore */
     lastW = layoutW();
-    scheduleRebuild(250);
+    scheduleRebuild(250, false);
   }, { passive: true });
 
-  /* Journey height changes (lazy images etc.) → keep geometry honest.
-     120px threshold: media settling nudges the layout by a few dozen px
-     at most — only REAL layout changes are worth a full rebuild.          */
+  /* Journey height changes (fonts, lazy media) → keep geometry honest.
+     Small shifts get a fast light rebuild; big ones a full rebuild.      */
   var lastH = 0;
   if ("ResizeObserver" in window) {
     var ro = new ResizeObserver(function (entries) {
       var h = entries[0].contentRect.height;
-      if (Math.abs(h - lastH) > 120) {
-        lastH = h;
-        scheduleRebuild(300);
-      }
+      var delta = Math.abs(h - lastH);
+      if (delta < 40) return;
+      lastH = h;
+      if (delta < 160) scheduleRebuild(120, true);
+      else scheduleRebuild(300, false);
     });
     ro.observe(journey);
+  }
+
+  /* Web fonts swapping in reflow the text blocks the line routes around */
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { scheduleRebuild(80, true); });
   }
 
   /* ------------------------------------------------------------------ *
