@@ -400,7 +400,16 @@ a:hover { text-decoration: none; }
   stroke: url(#spineGradient);
   stroke-width: 3;
   stroke-linecap: round;
-  filter: drop-shadow(0 0 6px rgba(122, 207, 214, 0.55));
+}
+/* The glow. Used to be drop-shadow() on .spine__fill — but Chrome re-runs
+   an SVG filter over the path's page-tall bounding box on EVERY scrolled
+   frame (Safari doesn't), which visibly stuttered on Chrome and Android.
+   A wide translucent stroke drawn underneath looks the same and is free. */
+.spine__halo {
+  fill: none;
+  stroke: rgba(122, 207, 214, 0.38);
+  stroke-width: 10;
+  stroke-linecap: round;
 }
 
 /* Node dots — positioned by JS on top of the line */

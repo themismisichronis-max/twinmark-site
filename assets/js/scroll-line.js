@@ -52,6 +52,9 @@
 
   var trackPath = svg.querySelector(".spine__track");
   var fillPath = svg.querySelector(".spine__fill");
+  var haloPath = svg.querySelector(".spine__halo");
+  /* fill + glow scrub together — same d, same length, same dash values  */
+  var inkPaths = haloPath ? [haloPath, fillPath] : [fillPath];
   var anchors = Array.prototype.slice.call(journey.querySelectorAll(".spine-anchor"));
 
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -61,7 +64,7 @@
      show everything, draw the line fully, skip all animation.              */
   if (!hasGsap || reducedMotion) {
     buildGeometry();
-    fillPath.style.strokeDasharray = "none";
+    inkPaths.forEach(function (p) { p.style.strokeDasharray = "none"; });
     dots().forEach(function (d) { d.classList.add("is-lit"); });
     return;
   }
@@ -404,6 +407,7 @@
     svg.style.height = H + "px";
     trackPath.setAttribute("d", d);
     fillPath.setAttribute("d", d);
+    if (haloPath) haloPath.setAttribute("d", d);
 
     /* Corner rounding can pull the curve a few px inside a waypoint, so
        each dot is snapped onto the nearest point of the DRAWN path — the
@@ -455,14 +459,16 @@
   function initDraw() {
     var length = fillPath.getTotalLength();
 
-    fillPath.style.strokeDasharray = length;
-    fillPath.style.strokeDashoffset = length;
+    inkPaths.forEach(function (p) {
+      p.style.strokeDasharray = length;
+      p.style.strokeDashoffset = length;
+    });
 
     /* The fill is scrubbed across the SVG itself (which ends at the last
        node, i.e. where the services end): drawing starts when its top
        crosses the TIP_ANCHOR horizon and completes when its bottom does —
        so the tip visually rides that horizon, forwards AND backwards.      */
-    drawTween = gsap.to(fillPath, {
+    drawTween = gsap.to(inkPaths, {
       strokeDashoffset: 0,
       ease: "none",
       scrollTrigger: {
@@ -539,10 +545,12 @@
     buildGeometry();
 
     var length = fillPath.getTotalLength();
-    fillPath.style.strokeDasharray = length;
-    fillPath.style.strokeDashoffset = length;
+    inkPaths.forEach(function (p) {
+      p.style.strokeDasharray = length;
+      p.style.strokeDashoffset = length;
+    });
 
-    drawTween = gsap.to(fillPath, {
+    drawTween = gsap.to(inkPaths, {
       strokeDashoffset: 0,
       ease: "none",
       scrollTrigger: {
@@ -560,7 +568,7 @@
        visibly re-sweep from the top after every rebuild.                   */
     var st = drawTween.scrollTrigger;
     if (st) {
-      gsap.set(fillPath, { strokeDashoffset: length * (1 - st.progress) });
+      gsap.set(inkPaths, { strokeDashoffset: length * (1 - st.progress) });
     }
   }
 

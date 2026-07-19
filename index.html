@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=19" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20" />
 </head>
 <body>
 
@@ -130,6 +130,9 @@
         </defs>
         <!-- faint full-length track -->
         <path class="spine__track" d="" />
+        <!-- soft glow: a wide translucent stroke UNDER the fill — cheap
+             everywhere, unlike the drop-shadow filter it replaces        -->
+        <path class="spine__halo" d="" />
         <!-- the animated fill, drawn in sync with scroll -->
         <path class="spine__fill" d="" />
       </svg>
@@ -447,8 +450,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
-  <script src="assets/js/scroll-line.js?v=19"></script>
-  <script src="assets/js/scroll-trail.js?v=19"></script>
-  <script src="assets/js/main.js?v=19"></script>
+  <script src="assets/js/scroll-line.js?v=20"></script>
+  <script src="assets/js/scroll-trail.js?v=20"></script>
+  <script src="assets/js/main.js?v=20"></script>
 </body>
 </html>

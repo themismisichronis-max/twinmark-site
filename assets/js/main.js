@@ -89,7 +89,11 @@
    *  z-index -1, so all content paints on top of it.
    * ------------------------------------------------------------------ */
 
-  if (!noMotion) {
+  /* Mouse pointers only. On phones the fog sat invisibly UNDER the
+     user's finger while its touchmove tracking repainted a big blurred
+     layer on every scroll frame — pure jank (worst on Chrome/Android),
+     zero visible effect. Desktop keeps the full experience.              */
+  if (!noMotion && fineMouse) {
     var fog = document.createElement("div");
     fog.className = "cursor-fog";
     fog.setAttribute("aria-hidden", "true");
@@ -112,13 +116,6 @@
 
     window.addEventListener("pointermove", function (e) {
       moveFog(e.clientX, e.clientY);
-    }, { passive: true });
-
-    /* touch scrolling cancels pointer events — track the finger directly */
-    window.addEventListener("touchmove", function (e) {
-      if (e.touches.length) {
-        moveFog(e.touches[0].clientX, e.touches[0].clientY);
-      }
     }, { passive: true });
 
     document.documentElement.addEventListener("mouseleave", function () {
