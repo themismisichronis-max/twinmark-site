@@ -134,8 +134,11 @@
       var a = p[j - 1], v = p[j], c = p[j + 1];
       var lenIn = dist(a, v);
       var lenOut = dist(v, c);
-      /* half of each leg keeps this arc clear of the neighbouring ones   */
-      var r = Math.min(CORNER_R, lenIn / 2, lenOut / 2);
+      /* half of each leg keeps this arc clear of the neighbouring ones.
+         A waypoint may carry its own radius cap (v.r): corners right
+         beside a text block on narrow screens MUST turn tighter, or the
+         arc reaches back up the lane and cuts through the words.         */
+      var r = Math.min(CORNER_R, lenIn / 2, lenOut / 2, v.r || CORNER_R);
       var t1 = 1 - r / lenIn;
       var t2 = r / lenOut;
       var ax = a.x + (v.x - a.x) * t1;
@@ -246,11 +249,15 @@
       var ax = passRight
         ? Math.min(r.right + SIDE_GAP, W - CONFIG.EDGE_PAD)
         : Math.max(r.left - SIDE_GAP, CONFIG.EDGE_PAD);
+      /* clamped lane hugging the card → its corners need a tight radius,
+         or the arc reaches back along the lane and clips the card       */
+      var sideSlack = passRight ? ax - r.right : r.left - ax;
       events.push({
         kind: "avoid",
         x: ax,
         top: r.top,
-        bottom: r.bottom
+        bottom: r.bottom,
+        rCap: sideSlack < 40 ? 40 : undefined
       });
     });
 
@@ -292,13 +299,13 @@
        arrives too early is nudged down instead of dropped, so the path
        never loses a routing waypoint (dropping one sends the line on a
        straight diagonal through whatever the waypoint was avoiding).      */
-    function pushPt(x, y) {
+    function pushPt(x, y, rCap) {
       var last = pts[pts.length - 1];
       if (y < last.y + 16) {
         if (x === last.x) return;          /* same column → nothing to add */
         y = last.y + 16;
       }
-      pts.push({ x: x, y: y });
+      pts.push({ x: x, y: y, r: rCap });
     }
 
     /* Keep the line vertical through long empty stretches instead of
@@ -323,8 +330,8 @@
         /* pass fully BESIDE the card — enter above it, leave below it.
            On desktop AV_GAP is 44: the rounded turn into the side lane
            arcs back toward the card, and less clearance clips its corner */
-        pushPt(b.x, b.top - AV_GAP);
-        pushPt(b.x, b.bottom + AV_GAP);
+        pushPt(b.x, b.top - AV_GAP, b.rCap);
+        pushPt(b.x, b.bottom + AV_GAP, b.rCap);
         /* sweep straight across to the next card's side (the user-drawn
            snake) — only return to center before a distant/none-card event.
            If the bypass lane is already near-center, stay in it: a jog of
@@ -343,6 +350,14 @@
       textIndex++;
       var tx = cx + dir * Math.min(b.halfW + CONFIG.CLEARANCE,
                                    W / 2 - CONFIG.EDGE_PAD);
+
+      /* On narrow screens the lane gets clamped against the block — a few
+         px of side clearance instead of CLEARANCE. The entry/exit corners
+         of this detour then need a tight radius cap: a big 120px arc
+         reaches back up the lane and slices through the text (the exact
+         "line through the words" bug on phones).                          */
+      var laneSlack = (W / 2 - CONFIG.EDGE_PAD) - (b.halfW + CONFIG.CLEARANCE);
+      var edgeR = laneSlack < 12 ? 30 : undefined;
 
       /* stay centered until any card above is fully passed, THEN swing.
          When the line already travels a near-center lane, keep that lane
@@ -374,18 +389,18 @@
            padding, never the words                                        */
         pushPt(cx, b.top - CONFIG.DOT_GAP);
         nodes.push({ x: cx, y: pts[pts.length - 1].y, dot: true });
-        pushPt(tx, b.top + 20);
-        /* +28 (not less): the exit turn's arc reaches ~this far back UP
-           the lane — less clearance lets it nick the block's bottom edge */
-        pushPt(tx, b.bottom + 28);
+        pushPt(tx, b.top + 20, edgeR);
+        /* +28/+30 (not less): the exit turn's arc reaches ~this far back
+           UP the lane — less clearance lets it nick the block's bottom   */
+        pushPt(tx, b.bottom + (edgeR ? 30 : 28), edgeR);
       } else {
         /* pass fully BESIDE the block — the line never enters the text
            column, so it can't cross the words or badge. The side lane
            NEVER ends above the block's bottom (even when a card sits
            close below), so the exit diagonal always crosses under the
            text, not through its last line.                                */
-        pushPt(tx, b.top - 36);
-        pushPt(tx, Math.max(b.bottom + 44, Math.min(b.bottom + 56, returnY - 18)));
+        pushPt(tx, b.top - 36, edgeR);
+        pushPt(tx, Math.max(b.bottom + 44, Math.min(b.bottom + 56, returnY - 18)), edgeR);
       }
 
       /* If the next card gets bypassed on this SAME side, don't dart back
@@ -639,6 +654,13 @@
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(function () { scheduleRebuild(80, true); });
   }
+
+  /* Belt & braces: timed light rebuilds shortly after boot catch early
+     layout settling (font swap, first media) even on browsers where the
+     observers above report late — the line must never sit on a stale
+     route for seconds.                                                   */
+  setTimeout(function () { scheduleRebuild(0, true); }, 600);
+  setTimeout(function () { scheduleRebuild(0, true); }, 1600);
 
   /* ------------------------------------------------------------------ *
    *  Boot
