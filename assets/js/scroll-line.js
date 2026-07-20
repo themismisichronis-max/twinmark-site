@@ -516,6 +516,37 @@
    * ------------------------------------------------------------------ */
 
   function initReveals() {
+    var touchDevice = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+
+    if (touchDevice && "IntersectionObserver" in window) {
+      /* PHONES: reveals via IntersectionObserver + CSS transitions.
+         GSAP's scroll-positioned triggers depend on layout measurements
+         that mobile browsers invalidate constantly (URL bars sliding,
+         late fonts, zoom). When those drift, elements freeze mid-
+         transform on top of each other and the whole page looks broken.
+         IO fires on REAL visibility — it cannot misplace anything, and
+         it costs nothing while scrolling.                                 */
+      document.documentElement.classList.add("io-reveal");
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: "0px 0px -6% 0px" });
+      Array.prototype.forEach.call(
+        document.querySelectorAll("[data-reveal]"),
+        function (el) { io.observe(el); }
+      );
+
+      /* Hero entrance still plays (it's visible on load anyway)           */
+      gsap.fromTo("[data-hero-reveal]",
+        { y: 28, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.9, ease: "power3.out", stagger: 0.12, delay: 0.15 });
+      return;
+    }
+
     gsap.utils.toArray("[data-reveal]").forEach(function (el) {
       /* data-reveal="left"|"right" → slide in from that side;
          plain data-reveal → rise up.                                       */

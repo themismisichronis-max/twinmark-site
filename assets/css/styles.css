@@ -938,6 +938,19 @@ a:hover { text-decoration: none; }
 .js [data-reveal],
 .js [data-hero-reveal] { opacity: 0; }
 
+/* Phone reveals (html.io-reveal, set by scroll-line.js): pure CSS
+   transitions fired by an IntersectionObserver on real visibility —
+   immune to the layout drift that froze the scroll-positioned reveals
+   mid-transform and left elements piled on top of each other.            */
+.io-reveal [data-reveal] {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.65s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.io-reveal [data-reveal="left"]  { transform: translateX(-56px); }
+.io-reveal [data-reveal="right"] { transform: translateX(56px); }
+.io-reveal [data-reveal].is-in { opacity: 1; transform: none; }
+
 /* ==========================================================================
    Responsive
    ========================================================================== */
