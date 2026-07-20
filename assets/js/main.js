@@ -169,9 +169,40 @@
   }
 
   /* ------------------------------------------------------------------ *
-   *  Live-site embed — keep the 1280px-wide iframe scaled to its frame
+   *  Live-site embed
+   *  Desktop loads the live site straight away. Touch devices show a
+   *  snapshot and only load the live site when tapped — a whole second
+   *  website running on a phone's main thread was starving the scroll
+   *  line and lagging the page, especially on slow connections where it
+   *  loaded late and shifted the layout under the already-drawn line.
    * ------------------------------------------------------------------ */
 
+  var browser = document.querySelector(".webshow .browser");
+  var liveFrame = browser ? browser.querySelector("iframe[data-src]") : null;
+  if (liveFrame) {
+    var loadFrame = function () {
+      if (!liveFrame.getAttribute("src")) {
+        liveFrame.setAttribute("src", liveFrame.getAttribute("data-src"));
+      }
+      browser.classList.add("is-live");
+      browser.classList.remove("needs-tap");
+    };
+
+    if (window.matchMedia("(pointer: coarse)").matches) {
+      browser.classList.add("needs-tap");           /* phone: wait for tap */
+      var loadBtn = browser.querySelector(".browser__load");
+      if (loadBtn) {
+        loadBtn.addEventListener("click", function () {
+          loadFrame();
+          browser.classList.add("is-interactive");   /* now scrollable      */
+        });
+      }
+    } else {
+      loadFrame();                                   /* desktop: live now   */
+    }
+  }
+
+  /* Keep the 1280px-wide iframe scaled to its frame                       */
   var frameViewport = document.querySelector(".browser__viewport");
   if (frameViewport) {
     var scaleFrame = function () {

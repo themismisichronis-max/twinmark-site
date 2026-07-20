@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=26" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=28" />
 </head>
 <body>
 
@@ -282,9 +282,21 @@
                   <a class="browser__url" href="https://lizzys-site-test.themismisichronis.workers.dev" target="_blank" rel="noopener">lizzys-site-test.themismisichronis.workers.dev</a>
                 </div>
                 <div class="browser__viewport">
-                  <iframe src="https://lizzys-site-test.themismisichronis.workers.dev"
+                  <!-- Phones show this snapshot until TAPPED, then the live
+                       site loads in place (see main.js). Desktop loads the
+                       live embed immediately. A full second website running
+                       on a phone's main thread was starving the scroll line
+                       and lagging the page; tapping keeps it scrollable but
+                       only when the visitor actually wants it.             -->
+                  <img class="browser__shot" src="assets/img/lizzys-preview.jpg"
+                       alt="Preview of the Lizzy's Coffee & more website"
+                       loading="lazy" decoding="async" />
+                  <iframe data-src="https://lizzys-site-test.themismisichronis.workers.dev"
                           title="Lizzy's Coffee & more — live website built by TWINMARK"
                           loading="lazy" tabindex="-1"></iframe>
+                  <button type="button" class="browser__load" aria-label="Load the live website to explore it">
+                    <span class="browser__live-dot"></span> Tap to explore live ↗
+                  </button>
                   <a class="browser__live" href="https://lizzys-site-test.themismisichronis.workers.dev" target="_blank" rel="noopener">
                     <span class="browser__live-dot"></span> Live · open site ↗
                   </a>
@@ -450,8 +462,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
-  <script src="assets/js/scroll-line.js?v=26"></script>
-  <script src="assets/js/scroll-trail.js?v=26"></script>
-  <script src="assets/js/main.js?v=26"></script>
+  <script src="assets/js/scroll-line.js?v=28"></script>
+  <script src="assets/js/scroll-trail.js?v=28"></script>
+  <script src="assets/js/main.js?v=28"></script>
 </body>
 </html>
