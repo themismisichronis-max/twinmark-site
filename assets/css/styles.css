@@ -328,7 +328,7 @@ a:hover { text-decoration: none; }
 
 /* Marquee */
 .marquee {
-  margin-top: clamp(48px, 8vh, 88px);
+  margin-top: clamp(48px, 8svh, 88px);   /* svh: stable under mobile bar    */
   margin-bottom: 96px;              /* room for the scroll cue below       */
   border-top: 1px solid var(--c-border);
   border-bottom: 1px solid var(--c-border);
@@ -570,6 +570,11 @@ a:hover { text-decoration: none; }
    pop the work up around the line while you travel through it. */
 .trail-stage {
   height: 135vh;
+  height: 135svh;   /* svh = small-viewport height: does NOT change when a
+                       mobile address bar slides in/out, so scrolling never
+                       resizes this section (which used to resize the whole
+                       page and make the scroll line refill from zero).
+                       vh above is the fallback for old browsers.          */
   display: grid;
   place-items: center;
 }
@@ -993,7 +998,7 @@ a:hover { text-decoration: none; }
   .phone[data-reveal="left"]  { grid-column: 1; justify-self: start; }
   .phone[data-reveal="right"] { grid-column: 1; justify-self: end; }
 
-  .trail-stage { height: 120vh; }
+  .trail-stage { height: 120vh; height: 120svh; }
 
   .webshow .browser { width: 90%; }
   .webshow__points  { width: 88%; margin-left: auto; }

@@ -129,17 +129,41 @@
 
   var videos = document.querySelectorAll(".phone__screen video");
   if ("IntersectionObserver" in window) {
+    /* Which videos are currently on screen and SHOULD be playing.         */
+    var wantPlaying = [];
     var vio = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var v = entry.target;
+        var i = wantPlaying.indexOf(v);
         if (entry.intersectionRatio >= 0.35) {
+          if (i === -1) wantPlaying.push(v);
           v.play().catch(function () { /* autoplay blocked — poster stays */ });
         } else {
+          if (i !== -1) wantPlaying.splice(i, 1);
           v.pause();
         }
       });
     }, { threshold: [0, 0.35] });
-    videos.forEach(function (v) { vio.observe(v); });
+    videos.forEach(function (v) {
+      vio.observe(v);
+      /* Mobile Chrome/Safari power-suspend background <video> under load —
+         and the observer won't re-fire (the video is still "in view"), so
+         it stays frozen. If a video pauses while it should be playing,
+         resume it. This is what restarts the reels on phones.             */
+      v.addEventListener("pause", function () {
+        if (wantPlaying.indexOf(v) !== -1 && !document.hidden) {
+          setTimeout(function () {
+            if (wantPlaying.indexOf(v) !== -1) v.play().catch(function () {});
+          }, 200);
+        }
+      });
+    });
+    /* Returning to the tab often leaves in-view videos paused — resume.   */
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) {
+        wantPlaying.forEach(function (v) { v.play().catch(function () {}); });
+      }
+    });
   } else {
     videos.forEach(function (v) { v.play().catch(function () {}); });
   }

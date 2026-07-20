@@ -60,6 +60,14 @@
   var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var hasGsap = typeof window.gsap !== "undefined" && typeof window.ScrollTrigger !== "undefined";
 
+  /* Touch devices HARD-LOCK the line to the scrollbar (scrub: true) instead
+     of the desktop's silky 0.8s smoothing. With smoothing, any refresh made
+     the fill visibly re-sweep from the start to catch up ("the line refills")
+     — hard-lock makes it a direct function of scroll, so it's always exactly
+     at the reader's position and can never replay. Desktop keeps the polish. */
+  var touch = window.matchMedia("(pointer: coarse)").matches;
+  var SCRUB_VALUE = touch ? true : CONFIG.SCRUB;
+
   /* Static fallback: no GSAP (offline CDN) or reduced motion →
      show everything, draw the line fully, skip all animation.              */
   if (!hasGsap || reducedMotion) {
@@ -490,7 +498,7 @@
         trigger: svg,
         start: "top " + CONFIG.TIP_ANCHOR * 100 + "%",
         end: "bottom " + CONFIG.TIP_ANCHOR * 100 + "%",
-        scrub: CONFIG.SCRUB,
+        scrub: SCRUB_VALUE,
         invalidateOnRefresh: true
       }
     });
@@ -603,7 +611,7 @@
         trigger: svg,
         start: "top " + CONFIG.TIP_ANCHOR * 100 + "%",
         end: "bottom " + CONFIG.TIP_ANCHOR * 100 + "%",
-        scrub: CONFIG.SCRUB,
+        scrub: SCRUB_VALUE,
         invalidateOnRefresh: true
       }
     });
