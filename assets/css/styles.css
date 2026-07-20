@@ -925,6 +925,9 @@ a:hover { text-decoration: none; }
   border-radius: 12px;
   box-shadow: 0 24px 50px -20px rgba(19, 26, 62, 0.45);
   opacity: 0;
+  object-fit: cover;             /* uniform portrait card: crops varied
+                                    source ratios instead of letting tall
+                                    images overflow and clip in half        */
   will-change: transform, opacity;
 }
 /* the "something cool" outside the image section: brand sparkles          */

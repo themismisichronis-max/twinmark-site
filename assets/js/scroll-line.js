@@ -68,12 +68,38 @@
   var touch = window.matchMedia("(pointer: coarse)").matches;
   var SCRUB_VALUE = touch ? true : CONFIG.SCRUB;
 
-  /* Static fallback: no GSAP (offline CDN) or reduced motion →
-     show everything, draw the line fully, skip all animation.              */
-  if (!hasGsap || reducedMotion) {
-    buildGeometry();
-    inkPaths.forEach(function (p) { p.style.strokeDasharray = "none"; });
-    dots().forEach(function (d) { d.classList.add("is-lit"); });
+  /* STATIC path — taken on phones (touch), plus the no-GSAP / reduced-motion
+     fallbacks. The line is drawn once, in full, and never animates: no
+     per-frame stroke redraw, no scroll-driven reveals, no ScrollTrigger at
+     all. That per-frame redraw of a page-tall path is what mobile Chrome
+     couldn't keep up with (Safari on the same phone could) — removing it
+     makes the page glide on every phone. Content is simply visible (the
+     "js" reveal-hiding class is never added), so nothing can freeze mid-
+     animation or get clipped. Desktop keeps the full animated experience. */
+  if (!hasGsap || reducedMotion || touch) {
+    var drawStatic = function () {
+      buildGeometry();
+      inkPaths.forEach(function (p) {
+        p.style.strokeDasharray = "none";
+        p.style.strokeDashoffset = "0";
+      });
+      dots().forEach(function (d) { d.classList.add("is-lit"); });
+    };
+    drawStatic();
+    /* Re-fit only when the WIDTH changes (orientation flip) — never on the
+       height-only jumps a mobile URL bar makes while scrolling.           */
+    var staticW = document.documentElement.clientWidth, staticTimer = null;
+    window.addEventListener("resize", function () {
+      if (document.documentElement.clientWidth === staticW) return;
+      staticW = document.documentElement.clientWidth;
+      clearTimeout(staticTimer);
+      staticTimer = setTimeout(drawStatic, 250);
+    }, { passive: true });
+    /* Re-fit once fonts and images have settled (cheap, no ScrollTrigger). */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(drawStatic);
+    }
+    window.addEventListener("load", drawStatic);
     return;
   }
 

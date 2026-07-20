@@ -228,9 +228,13 @@
       var mobile = vw() < 720;
       var w = rand(CONFIG.IMG_MIN, CONFIG.IMG_MAX) * (mobile ? 0.633 : 1);
       /* mobile factor = 0.55 × 1.15 — images run 15% bigger on phones    */
+      var h = w * 1.25;   /* fixed portrait card — with object-fit:cover this
+                             crops any source ratio so nothing overflows or
+                             gets clipped in half                          */
       img.style.width = w + "px";
+      img.style.height = h + "px";
       img.style.left = sideX(w) + "px";
-      spawnY(img, w * 1.2, scrollingDown);
+      spawnY(img, h, scrollingDown);
 
       layer.appendChild(img);
 
