@@ -127,25 +127,21 @@
    *  Videos — play only while on screen (battery + bandwidth friendly)
    * ------------------------------------------------------------------ */
 
-  /* The videos carry the `autoplay muted loop playsinline` attributes, so
-     the browser starts them itself — the most reliable way across Safari
-     and Chrome (a JS-initiated play() is blocked by several autoplay
-     policies, which is why the reels sometimes stayed frozen). This
-     observer only PAUSES the ones scrolled fully off screen to save
-     battery/bandwidth, and plays them again when they return.            */
   var videos = document.querySelectorAll(".phone__screen video");
   if ("IntersectionObserver" in window) {
     var vio = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         var v = entry.target;
-        if (entry.isIntersecting) {
-          v.play().catch(function () {});
+        if (entry.intersectionRatio >= 0.35) {
+          v.play().catch(function () { /* autoplay blocked — poster stays */ });
         } else {
           v.pause();
         }
       });
-    }, { threshold: 0.01 });
+    }, { threshold: [0, 0.35] });
     videos.forEach(function (v) { vio.observe(v); });
+  } else {
+    videos.forEach(function (v) { v.play().catch(function () {}); });
   }
 
   /* ------------------------------------------------------------------ *
