@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=26" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=32" />
 </head>
 <body>
 
@@ -282,7 +282,15 @@
                   <a class="browser__url" href="https://lizzys-site-test.themismisichronis.workers.dev" target="_blank" rel="noopener">lizzys-site-test.themismisichronis.workers.dev</a>
                 </div>
                 <div class="browser__viewport">
-                  <iframe src="https://lizzys-site-test.themismisichronis.workers.dev"
+                  <!-- Phones get this capture of the site; the live iframe below
+                       is enabled by main.js on cursor devices only. On iOS every
+                       iframe shares the page's main thread, so embedding a whole
+                       second site (plus its Google Map) made scrolling stutter
+                       through this section — the capture looks identical at
+                       phone scale and costs one small image.                   -->
+                  <img class="browser__poster" src="assets/img/lizzys-live-poster.jpg"
+                       alt="" width="1280" height="860" loading="lazy" decoding="async" />
+                  <iframe data-src="https://lizzys-site-test.themismisichronis.workers.dev"
                           title="Lizzy's Coffee & more — live website built by TWINMARK"
                           loading="lazy" tabindex="-1"></iframe>
                   <a class="browser__live" href="https://lizzys-site-test.themismisichronis.workers.dev" target="_blank" rel="noopener">
@@ -450,8 +458,8 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 
-  <script src="assets/js/scroll-line.js?v=26"></script>
-  <script src="assets/js/scroll-trail.js?v=26"></script>
-  <script src="assets/js/main.js?v=26"></script>
+  <script src="assets/js/scroll-line.js?v=32"></script>
+  <script src="assets/js/scroll-trail.js?v=32"></script>
+  <script src="assets/js/main.js?v=32"></script>
 </body>
 </html>

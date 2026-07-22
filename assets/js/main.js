@@ -159,6 +159,28 @@
       window.addEventListener("resize", scaleFrame, { passive: true });
     }
     scaleFrame();
+
+    /* The LIVE embed runs on cursor devices only. Phones keep the capture
+       behind it: on iOS every iframe shares the page's main thread, so the
+       embedded site's JS (and its Google Map) fought the scroll animations
+       for frames — plus ~3 MB of downloads for a view nobody can touch
+       (the frame is pointer-events:none at ~30% scale anyway).            */
+    var frame = frameViewport.querySelector("iframe[data-src]");
+    var cursorDevice = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (frame && cursorDevice) {
+      var loadFrame = function () { frame.src = frame.getAttribute("data-src"); };
+      if ("IntersectionObserver" in window) {
+        var fio = new IntersectionObserver(function (entries, obs) {
+          if (entries.some(function (e) { return e.isIntersecting; })) {
+            loadFrame();
+            obs.disconnect();
+          }
+        }, { rootMargin: "900px 0px" });   /* ~like the old loading=lazy */
+        fio.observe(frameViewport);
+      } else {
+        loadFrame();
+      }
+    }
   }
 
   /* ------------------------------------------------------------------ *
